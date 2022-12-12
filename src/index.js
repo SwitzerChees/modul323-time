@@ -5,27 +5,21 @@ import createElement from "virtual-dom/create-element";
 const { div, button } = hh(h);
 
 const MSGS = {
-  ADD: "ADD",
-  SUBTRACT: "SUBTRACT",
+  CURRENT_TIME: "CURRENT_TIME",
 };
 
 function view(dispatch, model) {
   const btnStyle = "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded";
   return div({ className: "flex flex-col gap-4 items-center" }, [
-    div({ className: "text-3xl" }, `Count: ${model}`),
-    div({ className: "flex gap-4" }, [
-      button({ className: btnStyle, onclick: () => dispatch(MSGS.ADD) }, "➕ Increase"),
-      button({ className: btnStyle, onclick: () => dispatch(MSGS.SUBTRACT) }, "➖ Decrease"),
-    ]),
+    div({ className: "text-3xl" }, `${model.currentTime}`),
+    div({ className: "flex gap-4" }, [button({ className: btnStyle, onclick: () => dispatch(MSGS.CURRENT_TIME) }, "🕰 Current Time")]),
   ]);
 }
 
 function update(msg, model) {
   switch (msg) {
-    case MSGS.ADD:
-      return model + 1;
-    case MSGS.SUBTRACT:
-      return model - 1;
+    case MSGS.CURRENT_TIME:
+      return { ...model, currentTime: new Date().toLocaleTimeString() };
     default:
       return model;
   }
@@ -46,7 +40,9 @@ function app(initModel, update, view, node) {
   }
 }
 
-const initModel = 0;
+const initModel = {
+  currentTime: new Date().toLocaleTimeString(),
+};
 
 const rootNode = document.getElementById("app");
 app(initModel, update, view, rootNode);
